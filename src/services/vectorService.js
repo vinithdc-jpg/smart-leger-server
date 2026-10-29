@@ -60,7 +60,7 @@ async function matchDocuments({
   try {
     const result = await pool.query(
       `
-      SELECT * FROM match_documents($1::vector, $2::real, $3::integer, $4::text)
+      SELECT * FROM public.match_documents($1::vector, $2::real, $3::integer, $4::text)
       `,
       [vector, boundedThreshold, boundedLimit, String(clubId)],
     );

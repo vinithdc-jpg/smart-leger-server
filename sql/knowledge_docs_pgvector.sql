@@ -87,7 +87,7 @@ CREATE POLICY ai_chat_logs_service_role_all ON ai_chat_logs
 
 -- The caller supplies the authenticated club scope. Filtering occurs in SQL
 -- before vector ranking; there is deliberately no NULL-club fallback.
-CREATE OR REPLACE FUNCTION match_documents(
+CREATE OR REPLACE FUNCTION public.match_documents(
 	query_embedding vector(384),
 	match_threshold real,
 	match_count integer,
@@ -126,5 +126,5 @@ AS $$
 	LIMIT LEAST(GREATEST(COALESCE(match_count, 5), 1), 20);
 $$;
 
-REVOKE ALL ON FUNCTION match_documents(vector, real, integer, text) FROM PUBLIC, anon, authenticated;
-GRANT EXECUTE ON FUNCTION match_documents(vector, real, integer, text) TO service_role;
+REVOKE ALL ON FUNCTION public.match_documents(vector, real, integer, text) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.match_documents(vector, real, integer, text) TO service_role;

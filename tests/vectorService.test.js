@@ -27,7 +27,7 @@ test("vector search passes the authenticated club scope to the database RPC", as
       threshold: 0.65,
     });
 
-    assert.match(queryText, /match_documents\(/i);
+    assert.match(queryText, /public\.match_documents\(/i);
     assert.deepEqual(values.slice(1), [0.65, 5, "club_A"]);
   } finally {
     pool.query = originalQuery;
@@ -38,6 +38,10 @@ test("database RPC filters club ownership before ranking, with no null-club fall
   const migration = fs.readFileSync(migrationPath, "utf8");
 
   assert.match(migration, /WHERE d\.club_id::text = filter_club_id/i);
+  assert.match(
+    migration,
+    /CREATE OR REPLACE FUNCTION public\.match_documents\(\s*query_embedding vector\(384\),\s*match_threshold real,\s*match_count integer,\s*filter_club_id text/is,
+  );
   assert.doesNotMatch(migration, /OR\s+d\.club_id\s+IS\s+NULL/i);
 });
 
